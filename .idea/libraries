@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="libraryTable">
+    <library name="scala-sdk-2.13.3" type="Scala">
+      <properties>
+        <language-level>Scala_2_13</language-level>
+        <compiler-classpath>
+          <root url="file:///usr/share/scala/scala-2.13.3/lib/scala-library.jar" />
+          <root url="file:///usr/share/scala/scala-2.13.3/lib/scala-reflect.jar" />
+          <root url="file:///usr/share/scala/scala-2.13.3/lib/scala-compiler.jar" />
+        </compiler-classpath>
+      </properties>
+      <CLASSES>
+        <root url="jar:///usr/share/scala/scala-2.13.3/lib/scala-library.jar!/" />
+        <root url="jar:///usr/share/scala/scala-2.13.3/lib/scala-reflect.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="https://www.scala-lang.org/api/2.13.3/" />
+      </JAVADOC>
+      <SOURCES />
+    </library>
+  </component>
+</project>
