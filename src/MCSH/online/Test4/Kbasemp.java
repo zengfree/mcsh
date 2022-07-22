@@ -43,7 +43,7 @@ public class Kbasemp {
         int[] edgeType = dataReader.readEdgeType();
         Map<Integer,float[]> attribute = dataReader.readattributed_float();
 
-        String queryfile = Config.QueryFile+args[5];
+        String queryfile =args[5];
 //        String queryfile = Config.QueryFile+"dblequerynodes.txt";
 //        String queryfile ="/home/hadoop/dblequerynodes.txt";
         int queryK = Integer.parseInt(args[0]);
@@ -82,9 +82,10 @@ public class Kbasemp {
             System.out.println("querynodes size:"+querynodes.size());
             stdin.close();
 
-            File logfile = new File(Config.ResultFile +args[4] +"/ktest/basemplogmap_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
+            File logfile = new File("result/basempyu_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
             FileWriter fw = new FileWriter(logfile, true);
             ExecutorService exec = Executors.newFixedThreadPool(threadnum);
+            adistance.setYu((float) 0.5);
             for(int queryid:querynodes){
                 System.out.println("Mp:"+queryMPath.toString()+",queryid:"+queryid);
                 exec.submit(()->{
@@ -110,6 +111,7 @@ public class Kbasemp {
             while(true){
                 if(exec.isTerminated()){
                     System.out.println("所有的子线程都已经结束了");
+                    fw.close();
                     break;
                 }
                 Thread.sleep(10000);

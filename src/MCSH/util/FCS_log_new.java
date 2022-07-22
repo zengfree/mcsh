@@ -45,6 +45,7 @@ public class FCS_log_new {
                 break;
             }else {
                 denstcc = community;
+                if(community.size()<=queryK+1) break;
             }
         }while (true);
 
@@ -91,6 +92,7 @@ public class FCS_log_new {
                 break;
             }else {
                 denstcc = community;
+                if(community.size()<=queryK+1) break;
             }
         }while (true);
 
@@ -135,6 +137,7 @@ public class FCS_log_new {
                 break;
             }else {
                 denstcc = community;
+                if(community.size()<=queryK+1) break;
             }
         }while (true);
         return denstcc;
@@ -167,7 +170,7 @@ public class FCS_log_new {
                 continue;
             }
 //            System.out.println("deleteid:"+deleteid);
-
+//            System.out.println(deleteid);
             //从图中删除点及其连边
 //            long t3 = System.nanoTime();
 //            System.out.println("delete node");
@@ -196,6 +199,7 @@ public class FCS_log_new {
 //                float dist2 = adistance.cal_subgraph_attr_dist_new(community,distancemap);
 //                System.out.println("dist:"+dist);
 //                System.out.println("dist2:"+dist2);
+//                System.out.println(dist+" , "+lastdistance[0]);
                 if(dist<=lastdistance[0]){
                     lastdistance[0]=dist;
 //                    System.out.println("delete "+deleteid);
@@ -261,8 +265,10 @@ public class FCS_log_new {
         }
 
         //删除这m个点及其连边
+//        StringBuffer str = new StringBuffer();
         Map<Integer, Set<Integer>> logMap = new HashMap<>();
         for (int i : deletenodes) {
+//            str.append(i).append(" ");
             Set<Integer> pnbset = pnbmap.get(i);
             for (Integer j : pnbset) {
                 if (!deletenodes.contains(j)) {
@@ -273,6 +279,7 @@ public class FCS_log_new {
             pnbmap.remove(i);
             logMap.put(i,pnbset);
         }
+//        System.out.println("nodes:"+str);
 //        long t4 = System.nanoTime();
 //        System.out.println("delete m node:"+(t4-t3));
 
@@ -319,7 +326,7 @@ public class FCS_log_new {
             if (deleteid == queryid) {
                 continue;
             }
-
+//            System.out.println(deleteid);
             Set<Integer> pnbset = pnbmap.get(deleteid);
             for (Integer j : pnbset) {
                 pnbmap.get(j).remove(deleteid);
@@ -362,7 +369,11 @@ public class FCS_log_new {
         //计算每个节点的属性得分并排序
 //        long t1 = System.nanoTime();
         Map<Integer,Float> sumdistance = adistance.cal_attribute_contribute(keepset);
-
+//        StringBuffer js = new StringBuffer();
+//        for (int i: jumpset) {
+//            js.append(i).append(" ");
+//        }
+//        System.out.println("js:"+js);
         List<Map.Entry<Integer, Float>> entryList = new ArrayList<>(sumdistance.entrySet());
         entryList.sort(new Comparator<Map.Entry<Integer, Float>>() {
             @Override
@@ -386,9 +397,12 @@ public class FCS_log_new {
             z++;
         }
 
+
         //删除这m个点及其连边
+//        StringBuffer str = new StringBuffer();
         Map<Integer,Set<Integer>> logMap = new HashMap<>();
         for (int i : deletenodes) {
+//            str.append(i).append(" ");
             Set<Integer> pnbset = pnbmap.get(i);
             for (Integer j : pnbset) {
                 if (!deletenodes.contains(j)) {
@@ -399,6 +413,7 @@ public class FCS_log_new {
             pnbmap.remove(i);
             logMap.put(i,pnbset);
         }
+//        System.out.println("nodes:"+str);
 //        long t4 = System.nanoTime();
 //        System.out.println("delete node:"+(t4-t3));
 
@@ -444,7 +459,7 @@ public class FCS_log_new {
             if (jumpset.contains(deleteid)) {
                 continue;
             }
-
+//            System.out.println(deleteid);
             Set<Integer> pnbset = pnbmap.get(deleteid);
             for (Integer j : pnbset) {
                 pnbmap.get(j).remove(deleteid);
@@ -456,6 +471,7 @@ public class FCS_log_new {
             community = findCKcore(pnbmap, k, queryid,logMap);
             if (community != null) {
                 float dist = adistance.cal_graphdist(community,keepset,distancemap,lastdistance);
+//                System.out.println(deleteid+","+dist+","+lastdistance[0]);
                 if(dist<=lastdistance[0]){
                     lastdistance[0] = dist;
                     lastdistance[2] = lastdistance[1];

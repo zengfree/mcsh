@@ -16,6 +16,10 @@ public class IB {
 //        DataReader dataReader = new DataReader(Config.authorGraph, Config.authorVertex, Config.authorEdge, Config.authorA2G,Config.authorattribute);
         DataReader dataReader ;
         switch (args[0]){
+            case "small":
+                System.out.println("small");
+                dataReader = new DataReader(Config.authorGraph, Config.authorVertex, Config.authorEdge, null,Config.authorattribute);
+                break;
             case "dblp":
                 System.out.println("dblp");
                 dataReader = new DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge, null,Config.dblpattributed);
@@ -58,15 +62,19 @@ public class IB {
             cont[i] = 1;
         }
 
-        String datafile = Config.IndexRoot+args[0]+"/"+Path.toString()+"data.txt";
-        String idnexfile = Config.IndexRoot+args[0]+"/"+Path.toString()+"index.n2";
-        System.out.println(datafile);
-        Gweight_float gweight = new Gweight_float(main, text, cont, 2);
-        Adistance_float adistance = new Adistance_float(attribute, gweight);
+        float[] f = new float[]{(float)0.1,(float)0.2,(float)0.3,(float)0.4,(float)0.5,(float)0.6,(float)0.7,(float) 0.8};
+//        float[] f = new float[]{(float)0.2,(float)0.4,(float)0.6,(float)0.8,(float)1.0};
+        for (int i = 0; i < f.length; i++) {
+            float langda = f[i];
+            String datafile = args[0]+"/"+langda+Path+"data.txt";
+            String idnexfile = args[0]+"/"+langda+Path+"index.n2";
+            System.out.println(datafile);
+            Gweight_float gweight = new Gweight_float(main, text, cont, 2);
+            Adistance_float adistance = new Adistance_float(attribute, gweight);
 
-        MixIndex mix = new MixIndex(graph,vertexType,edgeType,attribute,adistance);
-        mix.build(Path,idnexfile,datafile,M,ef);
-
+            MixIndex mix = new MixIndex(graph,vertexType,edgeType,attribute,adistance);
+            mix.build(Path,idnexfile,datafile,M,ef,langda);
+        }
     }
 
     public static int[] StringToInt(String[] arr){

@@ -13,10 +13,14 @@ public class Adistance_float {
     private float[] weights ;
     private int text_num = 0;
     private int cont_num = 0;
+    private float yu = (float) 0.5;
     public Gweight_float getPreference_weights() {
         return preference_weights;
     }
 
+    public void setYu(float yu){
+        this.yu = yu;
+    }
 
     public float cal_distance(float[] attri1,float[] attri2){
 //        float[] attr_text1 = new float[this.text_num],attr_text2= new float[this.text_num],attr_cont1= new float[this.cont_num],attr_cont2= new float[this.cont_num];
@@ -71,11 +75,19 @@ public class Adistance_float {
         if(attri1!=null && attri2!=null){
             float jdist = this.preference_weights.getWeights_vector_main()[0]*Jdistance(attri1,attri2,this.weights,text_num);
             float mdist = this.preference_weights.getWeights_vector_main()[1]*Mdistance(attri1,attri2,this.weights,cont_num);
-
+//            System.out.println(jdist);
+//            System.out.println(mdist);
             return jdist+mdist;
         }
 
         return 0;
+    }
+
+    private float cal_vac(int id1,int id2){
+        float[] attri1 = this.attributemap.get(id1);
+        float[] attri2 = this.attributemap.get(id2);
+        float jdist = this.preference_weights.getWeights_vector_main()[0]*Jdistance(attri1,attri2,this.weights,text_num);
+        return jdist;
     }
 
     private float Mdistance(float[] attribute1,float[] attribute2, float[] weight){
@@ -116,7 +128,11 @@ public class Adistance_float {
         }
 
         for(int i=text_num;i<text_num+num;i++){
+//            System.out.println(weight[i]);
+//            System.out.println(attribute1[i]);
+//            System.out.println(attribute2[i]);
             result += weight[i]*Math.abs(attribute1[i]-attribute2[i]);
+//            System.out.println(result);
         }
         return result;
     }
@@ -148,9 +164,11 @@ public class Adistance_float {
             for(Integer j:set){
                 if(!label.contains(j)){
                     sum+=cal_distance(i,j);
+//                    System.out.println(cal_distance(i,j));
                 }
             }
         }
+//        System.out.println(sum);
         return sum*2/((set.size()-1)* set.size());
     }
 
@@ -257,36 +275,6 @@ public class Adistance_float {
         return sum*2/((set.size()-1)* set.size());
     }
 
-    public float cal_graphavgdist(Set<Integer> set,Map<Integer,Map<Integer,Float>> distancemap){
-        long t1 = System.nanoTime();
-        List<Integer> sortedlist = new ArrayList<>(set);
-        sortedlist.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2.compareTo(o1);
-            }
-        });
-        long t2 = System.nanoTime();
-        System.out.println("sort :"+(t2-t1));
-
-        float sum = 0;
-        int cont = 0;
-        int num = sortedlist.size();
-        for(int i=0;i<num;i++){
-            int i_id = sortedlist.get(i);
-            Map<Integer,Float> distmap = distancemap.get(i_id);
-            for(int j=i+1;j<num;j++){
-                int j_id = sortedlist.get(j);
-//                sum+=distancemap.get(i_id).get(j_id);
-                cont++;
-                sum+= distmap.get(j_id);
-            }
-        }
-        System.out.println("cont:"+cont);
-
-        return sum*2/((set.size()-1)* set.size());
-    }
-
 
     public Set<Integer> cal_find_smallest(Set<Integer> set,float[] queryvec,int M){
         Map<Integer, Float> sumdistance = new HashMap<>();
@@ -314,13 +302,50 @@ public class Adistance_float {
         float[] avg = new float[text_num+cont_num];
         for(int id:set){
             for(int i =0;i<avg.length;i++){
+//                System.out.println(id);
                 avg[i] += this.attributemap.get(id)[i];
             }
         }
         for(int i =0;i<avg.length;i++){
             avg[i] = avg[i]/set.size();
         }
+//        System.out.println(Arrays.toString(avg));
+
+//        System.out.println(yu);
+        for (int i = 0; i < text_num; i++) {
+            if(avg[i]>=this.yu){
+                avg[i] = 1;
+            }else {
+                avg[i] = 0;
+            }
+        }
+//        System.out.println(Arrays.toString(avg));
         return avg;
+    }
+
+    public int[] tji(Set<Integer> set){
+        float[] avg = new float[text_num+cont_num];
+        for(int id:set){
+            for(int i =0;i<avg.length;i++){
+                System.out.print(id+",");
+                avg[i] += this.attributemap.get(id)[i];
+            }
+        }
+        for(int i =0;i<avg.length;i++){
+            avg[i] = avg[i]/set.size();
+        }
+//        System.out.println(Arrays.toString(avg));
+
+        int[] tji = new int[10];
+//        System.out.println(yu);
+        for (int i = 0; i < text_num; i++) {
+//            System.out.println(avg[i]);
+            int j = (int) Math.floor(avg[i]/0.1);
+//            System.out.println(avg[i]+","+j);
+            tji[j] +=1;
+        }
+        System.out.println(Arrays.toString(tji));
+        return tji;
     }
 
     public Map<Integer,Float> cal_attribute_contribute(Set<Integer> set){
@@ -332,49 +357,74 @@ public class Adistance_float {
         return map;
     }
 
-//    public static void main(String[] args) {
-//        Map<Integer,Map<Integer,Float>> map = new HashMap<>();
-//        Map<Integer,Float> floatMap = new HashMap<>();
-//        floatMap.put(1,(float)1.0);
-//        floatMap.put(2,(float)0.8);
-//        floatMap.put(3,(float)1.0);
-//        map.put(0,floatMap);
-//
-//        Map<Integer,Float> floatMap2 = new HashMap<>();
-//        floatMap2.put(0,(float)1.0);
-//        floatMap2.put(2,(float)0.5);
-//        floatMap2.put(3,(float)1.0);
-//        map.put(1,floatMap2);
-//
-//        Map<Integer,Float> floatMap3= new HashMap<>();
-//        floatMap3.put(1,(float)0.8);
-//        floatMap3.put(0,(float)0.5);
-//        floatMap3.put(3,(float)0.7);
-//        map.put(2,floatMap3);
-//
-//        Map<Integer,Float> floatMap4 = new HashMap<>();
-//        floatMap4.put(0,(float)1.0);
-//        floatMap4.put(1,(float)1.0);
-//        floatMap4.put(2,(float)0.7);
-//        map.put(3,floatMap4);
-//        Set<Integer> set = new HashSet<>();
-//        set.add(0);
-//        set.add(1);
-//        set.add(2);
-//        set.add(3);
-//        Adistance_float adistance_float = new Adistance_float();
-//        float[] dis = new float[2];
-//        float dist = adistance_float.cal_subgraph_attr_dist_new2(set,map,dis);
-//        System.out.println(dist);
-//        Set<Integer> set2 = new HashSet<>();
-//        set2.add(0);
-//        set2.add(1);
-//        float dist2 = adistance_float.cal_subgraph_attr_dist_new(set2,map);
-//
-//        float dist3 = adistance_float.cal_graphdist(set2,set,map,dis);
-//        System.out.println("dist2:"+dist2);
-//        System.out.println("dist3:"+dist3);
-//
-//    }
+    public float cal_coverage(Set<Integer> set,int[] vector){
+        float coverage = 0;
+        int num = 0;
+        for (int i = 0; i < vector.length; i++) {
+            float sum = 0;
+            if(vector[i]==1){
+                num++;
+                for (int j:set) {
+                    sum+=attributemap.get(j)[i];
+                }
+            }
+            coverage += sum/set.size();
+        }
+        return coverage/num;
+    }
 
+    public float cal_fugailv(Set<Integer> set,int[] vector) {
+        float[] avg = new float[text_num + cont_num];
+        for (int id : set) {
+            for (int i = 0; i < vector.length; i++) {
+                if (vector[i] != 0) {
+                    avg[i] += this.attributemap.get(id)[i];
+                }
+            }
+        }
+//        System.out.println(Arrays.toString(avg));
+
+        float s = 0;
+        for (int i = 0; i < vector.length; i++) {
+            if (vector[i] != 0) {
+                s += Math.pow(avg[i], 2) / set.size();
+            }
+        }
+        return s;
+    }
+
+    public float cal_maxdist(Set<Integer> set) {
+        Set<Integer> label = new HashSet<>();
+        float max = 0;
+        for(Integer i:set){
+            label.add(i);
+            for(Integer j:set){
+                if(!label.contains(j)){
+                    max = Math.max(max,cal_distance(i,j));
+//                    max = Math.max(max,cal_vac(i,j));
+                }
+            }
+        }
+        return max;
+    }
+
+    public float maxnum(Set<Integer> set,int[] vector){
+        float max = 0;
+        float[] avg = new float[text_num + cont_num];
+        for (int id : set) {
+            for (int i = 0; i < vector.length; i++) {
+                if (vector[i] != 0) {
+                    avg[i] += this.attributemap.get(id)[i];
+                }
+            }
+        }
+        for (int i = 0; i < vector.length; i++) {
+            if (vector[i] != 0) {
+                avg[i] = avg[i]/set.size();
+                if(avg[i]==1) max++;
+
+            }
+        }
+        return max;
+    }
 }

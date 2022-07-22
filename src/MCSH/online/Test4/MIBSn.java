@@ -55,6 +55,7 @@ public class MIBSn {
         MetaPath queryMPath = new MetaPath(vertex, edge);
         int v1 = Integer.parseInt(args[6]);
         int interval = Integer.parseInt(args[7]);
+        float langda = Float.parseFloat(args[8]);
 
         int textnum = (int)attribute.get(-1)[0];
         int contnum = (int)attribute.get(-1)[1];
@@ -83,17 +84,15 @@ public class MIBSn {
             }
             stdin.close();
 
-//            String datafile = "/home/star/zxj/code2/dblpdata.txt";
-//            String idnexfile = "/home/star/zxj/code2/dblpindex.n2";
 
-            String datafile = Config.IndexRoot+args[4]+"/"+queryMPath.toString()+"data.txt";
-            String idnexfile = Config.IndexRoot+args[4]+"/"+queryMPath.toString()+"index.n2";
-
+            String datafile = args[4]+"/"+langda+queryMPath+"data.txt";
+            String idnexfile = args[4]+"/"+langda+queryMPath+"index.n2";
+            System.out.println("langda:"+langda);
             for (int i = 0 ; i <= 7; i++) {
                 int v2 = i * interval + v1;
-                File logfile = new File(Config.ResultFile + args[4] +"/Index/" + v2 + "_" + queryMPath.toString() + ".txt");
-                File logfile2 = new File(Config.ResultFile + args[4] +"/Indexm/" + v2 + "_" + queryMPath.toString() + ".txt");
-                File logfile3 = new File(Config.ResultFile + args[4] +"/Indexmp/" + v2 + "_" + queryMPath.toString() + ".txt");
+                File logfile = new File(args[4] +"/Index/" + v2 + "_" + queryMPath.toString() + ".txt");
+                File logfile2 = new File(args[4] +"/Indexm/" + v2 + "_" + queryMPath.toString() + ".txt");
+                File logfile3 = new File(args[4] +"/Indexmp/" + v2 + "_" + queryMPath.toString() + ".txt");
                 FileWriter fw = new FileWriter(logfile, false);
                 FileWriter fw2 = new FileWriter(logfile2, false);
                 FileWriter fw3 = new FileWriter(logfile3, false);
@@ -104,7 +103,7 @@ public class MIBSn {
                         try{
                             long t1 = System.nanoTime();
                             MixBasedSearch mix = new MixBasedSearch(graph,vertexType,edgeType,attribute,adistance,datafile,idnexfile);
-                            Set<Integer> result = mix.query(queryid,queryK,queryMPath,v2);
+                            Set<Integer> result = mix.query(queryid,queryK,queryMPath,v2,langda);
                             long t2 = System.nanoTime();
                             if(result!=null){
                                 System.out.println("index:"+queryid);
@@ -117,7 +116,7 @@ public class MIBSn {
 
                             long t3 = System.nanoTime();
                             MixBasedSearch mix2 = new MixBasedSearch(graph,vertexType,edgeType,attribute,adistance,datafile,idnexfile);
-                            Set<Integer> result2 = mix2.queryM(queryid,queryK,queryMPath,v2,queryM);
+                            Set<Integer> result2 = mix2.queryM(queryid,queryK,queryMPath,v2,queryM,langda);
                             long t4 = System.nanoTime();
                             //                System.out.println(result);
                             if(result!=null){
@@ -131,7 +130,7 @@ public class MIBSn {
 
                             long t5 = System.nanoTime();
                             MixBasedSearch mix3 = new MixBasedSearch(graph,vertexType,edgeType,attribute,adistance,datafile,idnexfile);
-                            Set<Integer> result3 = mix3.queryMP(queryid,queryK,queryMPath,v2,queryM);
+                            Set<Integer> result3 = mix3.queryMP(queryid,queryK,queryMPath,v2,queryM,langda);
                             long t6 = System.nanoTime();
                             if(result!=null){
                                 System.out.println("indexmp:"+queryid);

@@ -44,7 +44,7 @@ public class Kbase {
         Map<Integer,float[]> attribute = dataReader.readattributed_float();
 
 
-        String queryfile = Config.QueryFile+args[5];
+        String queryfile = args[5];
 //        String queryfile ="/home/hadoop/dblequerynodes.txt";
         int queryK = Integer.parseInt(args[0]);
         int queryM = Integer.parseInt(args[1]);
@@ -86,9 +86,10 @@ public class Kbase {
             System.out.println("querynodes size:"+querynodes.size());
             stdin.close();
 
-            File logfile = new File(Config.ResultFile +args[4] +"/ktest/baselogmap_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
+            File logfile = new File("result/baseyu_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
             FileWriter fw = new FileWriter(logfile, true);
             ExecutorService exec = Executors.newFixedThreadPool(threadnum);
+            adistance.setYu((float) 0.5);
             for(int queryid:querynodes){
                 System.out.println("Mp:"+queryMPath.toString()+",queryid:"+queryid);
                 exec.submit(()->{

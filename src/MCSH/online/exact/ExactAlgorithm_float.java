@@ -17,8 +17,6 @@ public class ExactAlgorithm_float {
     private int queryK = -1;//the threshold k
     private Adistance_float adistance = null;
     private int threadnum;
-//    private static ExecutorService es;
-//    private String pnbMapPath = "pnbmap.txt";
 
     public ExactAlgorithm_float(int[][] graph, int[] vertexType, int[] edgeType, Map<Integer, float[]> attribute , Adistance_float adistance,int threadnum) {
         this.graph = graph;
@@ -73,6 +71,54 @@ public class ExactAlgorithm_float {
         //step 3: brute force to traverse all possible kcore
         ForkJoinPool pool = new ForkJoinPool(threadnum);
         ForkJoinTask<Set<Integer>> task = pool.submit(new Kcore_find_float(pnbMap,this.queryK, this.queryId,-1,this.adistance,distancemap));
+        return task.join();
+    }
+
+    public Set<Integer> query2(int queryId, int queryK, MetaPath queryMPath){
+        this.queryId = queryId;
+        this.queryMPath = queryMPath;
+        this.queryK = queryK;
+
+
+        //step 0: check whether queryId's type matches with the meta-path
+        if(queryMPath.vertex[0] != vertexType[queryId])   return null;
+
+
+        //step 1: build the connected homogeneous graph
+        //step 1.5: compute the connected subgraph via batch-search with labeling (BSL)
+        BatchLinker batchLinker = new BatchLinker( graph,vertexType, edgeType);
+        Set<Integer> keepSet = batchLinker.link(queryId, queryMPath);
+        Map<Integer, Set<Integer>> pnbMap = buildGraph(keepSet);
+
+
+        //step 2: compute the connected k-core
+        Set<Integer> community = findKCore(pnbMap);
+        if(community==null) return null;
+
+//        System.out.println(community.size());
+        Map<Integer, Map<Integer,Float>> distancemap = new HashMap<>();
+        for(int i:community){
+            distancemap.put(i,new HashMap<>());
+        }
+
+        //step 2: cal the distance
+        Set<Integer> label = new HashSet<>();
+        for(int i:community){
+            label.add(i);
+            for (int j:community){
+                if(!label.contains(j))
+                {
+                    float dist = adistance.cal_distance(i, j);
+                    distancemap.get(i).put(j,dist);
+                    distancemap.get(j).put(i,dist);
+                }
+            }
+        }
+
+        //step 3: brute force to traverse all possible kcore
+        System.out.println("K3");
+        ForkJoinPool pool = new ForkJoinPool(threadnum);
+        ForkJoinTask<Set<Integer>> task = pool.submit(new K3(pnbMap,this.queryK, this.queryId,-1,this.adistance,distancemap));
         return task.join();
     }
 

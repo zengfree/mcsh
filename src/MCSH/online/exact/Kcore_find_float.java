@@ -3,13 +3,15 @@ package MCSH.online.exact;
 import MCSH.util.Adistance_float;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
 public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
     private Map<Integer, Set<Integer>> pnbMap;
-    private int queryK;
-    private int queryId;
+    private final int queryK;
+    private final int queryId;
     private int deleteid;
     private Adistance_float adistance;
     private Map<Integer,Map<Integer,Float>> distanceMap;
@@ -17,13 +19,13 @@ public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
     private Set<Integer> findKCore() {
         //step 0:delete the nodes and their neibors
 
-        if(deleteid!=-1){
-            Set<Integer> delneibor = pnbMap.get(deleteid);
-            for(int nei: delneibor){
-                pnbMap.get(nei).remove(deleteid);
-            }
-            pnbMap.put(deleteid,new HashSet<>());
+        if(deleteid==-1) return pnbMap.keySet();
+
+        Set<Integer> delneibor = pnbMap.get(deleteid);
+        for(int nei: delneibor){
+            pnbMap.get(nei).remove(deleteid);
         }
+        pnbMap.put(deleteid,new HashSet<>());
 
         //simulate a queue
         Queue<Integer> queue = new LinkedList<Integer>();
@@ -60,7 +62,7 @@ public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
         //找连通图
         if(!pnbMap.containsKey(queryId)) return null;
         if(pnbMap.get(queryId).size() < queryK)   return null;
-        Set<Integer> community = new HashSet<Integer>();//vertices which have been put into queue
+        Set<Integer> community = new HashSet<>();//vertices which have been put into queue
         Queue<Integer> ccQueue = new LinkedList<Integer>();
         ccQueue.add(queryId);
         community.add(queryId);
@@ -112,6 +114,14 @@ public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
     protected Set<Integer> compute() {
         Set<Integer> community = findKCore();
         if(community==null) return null;
+//        StringBuffer str = new StringBuffer();
+//        for(int i:community){
+//            str.append(i).append(" ");
+//        }
+//        System.out.println(str);
+        if(community.size()<=queryK) return null;
+//        System.out.println(community.size());
+//        System.out.println(queryId+","+queryK);
         Set<Integer> result = new HashSet<>(community);
 
         Set<ForkJoinTask<Set<Integer>>> tasks =new HashSet<>();
@@ -119,6 +129,7 @@ public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
             if(nodeid>deleteid)
             {
                 tasks.add(new Kcore_find_float(this.pnbMap,this.queryK,this.queryId,nodeid,adistance,distanceMap));
+//                System.out.println(nodeid);
             }
         }
 
@@ -128,11 +139,19 @@ public class Kcore_find_float extends RecursiveTask<Set<Integer>> {
         for (ForkJoinTask<Set<Integer>> task:tasks){
             Set<Integer> val = task.join();
             if(val==null) continue;
+//            System.out.println(val.size());
+//            StringBuffer str = new StringBuffer();
+//            for(int i:val){
+//                str.append(i).append(" ");
+//            }
+//            System.out.println(str);
             float dist = this.adistance.cal_subgraph_attr_dist_compare(val,distanceMap);
-            if(dist<=mindist){
+//            if(dist<=mindist){
+            if(mindist-dist>1e-9){
                 mindist = dist;
-                result.clear();
-                result.addAll(val);
+//                result.clear();
+//                result.addAll(val);
+                result = val;
             }
         }
 

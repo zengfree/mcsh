@@ -1,0 +1,9 @@
+Xuemin Lin
+OURS:,Lu Qin,Gao Cong,Beng Chin Ooi,Kian-Lee Tan,Guoliang Li,Ying Zhang,Jeffrey Xu Yu,Xiaofang Zhou,Xiaokui Xiao,Xuemin Lin,Bin Cui,Reynold Cheng,Dongxiang Zhang,H. V. Jagadish,Yixiang Fang,Christian S. Jensen,Xiaoyong Du,Wenjie Zhang,Lei Chen
+avgdist:0.42261684;maxdist:0.67888576;fugailv:65.0;maxshare:0.0;size:19
+Xuemin Lin
+OURS:,Lu Qin,Gao Cong,Beng Chin Ooi,Kian-Lee Tan,Guoliang Li,Ying Zhang,Jeffrey Xu Yu,Xiaofang Zhou,Xiaokui Xiao,Xuemin Lin,Bin Cui,Reynold Cheng,Dongxiang Zhang,H. V. Jagadish,Yixiang Fang,Christian S. Jensen,Xiaoyong Du,Wenjie Zhang,Lei Chen
+avgdist:0.42261684;maxdist:0.67888576;fugailv:65.0;maxshare:0.0;size:19
+Xuemin Lin
+OURS:,Lu Qin,Gao Cong,Beng Chin Ooi,Kian-Lee Tan,Guoliang Li,Ying Zhang,Jeffrey Xu Yu,Xiaofang Zhou,Xiaokui Xiao,Xuemin Lin,Bin Cui,Reynold Cheng,Dongxiang Zhang,H. V. Jagadish,Yixiang Fang,Christian S. Jensen,Xiaoyong Du,Wenjie Zhang,Lei Chen
+avgdist:0.42261684;maxdist:0.67888576;fugailv:65.0;maxshare:0.0;size:19

@@ -55,6 +55,7 @@ public class MIBSmp {
         MetaPath queryMPath = new MetaPath(vertex, edge);
         int v1 = Integer.parseInt(args[6]);
         int interval = Integer.parseInt(args[7]);
+        float langda = Float.parseFloat(args[8]);
 
         int textnum = (int)attribute.get(-1)[0];
         int contnum = (int)attribute.get(-1)[1];
@@ -86,8 +87,8 @@ public class MIBSmp {
 //            String datafile = "/home/star/zxj/code2/dblpdata.txt";
 //            String idnexfile = "/home/star/zxj/code2/dblpindex.n2";
 
-            String datafile = Config.IndexRoot+args[4]+"/"+queryMPath.toString()+"data.txt";
-            String idnexfile = Config.IndexRoot+args[4]+"/"+queryMPath.toString()+"index.n2";
+            String datafile = args[4]+"/"+langda+queryMPath+"data.txt";
+            String idnexfile = args[4]+"/"+langda+queryMPath+"index.n2";
 
             for (int i = 0 ; i <= 7; i++) {
                 int v2 = i * interval + v1;
@@ -100,7 +101,7 @@ public class MIBSmp {
                         try{
                             long t5 = System.nanoTime();
                             MixBasedSearch mix3 = new MixBasedSearch(graph,vertexType,edgeType,attribute,adistance,datafile,idnexfile);
-                            Set<Integer> result3 = mix3.queryMP(queryid,queryK,queryMPath,v2,queryM);
+                            Set<Integer> result3 = mix3.queryMP(queryid,queryK,queryMPath,v2,queryM,(float) 1.0);
                             long t6 = System.nanoTime();
                             if(result3!=null){
                                 System.out.println("indexmp:"+queryid);

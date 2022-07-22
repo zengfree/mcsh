@@ -29,7 +29,7 @@ public class MixIndex {
         this.adistance = adistance;
     }
 
-    public void build(MetaPath queryMPath,String indexfile,String datafile,int M, int ef) throws IOException {
+    public void build(MetaPath queryMPath,String indexfile,String datafile,int M, int ef,float langda) throws IOException {
         this.queryMPath = queryMPath;
 
         //step 1: build the connected homogeneous graph
@@ -54,17 +54,62 @@ public class MixIndex {
             kcc.addAll(pnbMap.keySet());
         }
         fw.close();
-        Nsw index = new Nsw();
+        Nsw2 index = new Nsw2();
         Gweight_float gweight = adistance.getPreference_weights();
-        index.build(datafile,indexfile,gweight.getbuildweight(), gweight.getTextnum(), gweight.getContnum(), M,ef);
+        index.build(datafile,indexfile,gweight.getbuildweight(), gweight.getTextnum(), gweight.getContnum(), M,ef,langda);
     }
 
-    public Set<Integer> search(int queryid,int queryK,int queryN,String datafile,String indexfile){
-        Nsw index = new Nsw();
-        readCorrespond(datafile);
-        int ef = queryN*5;
+    public void buildfsq(MetaPath queryMPath,String indexfile,String datafile,int M, int ef,float langda) throws IOException {
+        this.queryMPath = queryMPath;
+        long t1 = System.nanoTime();
+        //step 1: build the connected homogeneous graph
+        Map<Integer, Set<Integer>> pnbMap = buildGraph();
+        Map<Integer, Set<Integer>> map = copyMap(pnbMap);
+        findKCore(map,2200);
+        for (int key: map.keySet()         ) {
+            Set<Integer> set = pnbMap.get(key);
+            for (int nei:set             ) {
+                pnbMap.get(nei).remove(key);
+            }
+            pnbMap.put(key,new HashSet<>());
+        }
+
+        int queryK = 400;
+        findKCore(pnbMap,queryK);
+        long t2 = System.nanoTime();
+        System.out.println("build time:"+(t2-t1)/1e9);
+        queryK++;
+        Set<Integer> kcc = new HashSet<>(pnbMap.keySet());
+        FileWriter fw = new FileWriter(datafile,false);
+        //step 2: compute the connected k-core
+        while (!pnbMap.isEmpty()){
+            findKCore(pnbMap,queryK);
+            kcc.removeAll(pnbMap.keySet());
+            int pcoreness = queryK-1;
+            for (int i:kcc) {
+//                fw.write(i);
+                fw.write(trans(attribute.get(i),i)+"\n");
+                fw.write(pcoreness+" "+"\n");
+            }
+//            System.out.println(queryK+"finished");
+            queryK++;
+            kcc.clear();
+            kcc.addAll(pnbMap.keySet());
+        }
+        fw.close();
+        long t3 = System.nanoTime();
+        System.out.println("coreDec:"+(t3-t2)/1e9);
+        Nsw2 index = new Nsw2();
         Gweight_float gweight = adistance.getPreference_weights();
-        int[] m =  index.search(attribute.get(queryid),queryK,queryN,ef,indexfile, gweight.getbuildweight(), gweight.getTextnum(), gweight.getContnum());
+        index.build(datafile,indexfile,gweight.getbuildweight(), gweight.getTextnum(), gweight.getContnum(), M,ef,langda);
+    }
+
+    public Set<Integer> search(int queryid,int queryK,int queryN,String datafile,String indexfile,float langda){
+        Nsw2 index = new Nsw2();
+        readCorrespond(datafile);
+        int ef = queryN*8;
+        Gweight_float gweight = adistance.getPreference_weights();
+        int[] m =  index.search(attribute.get(queryid),queryK,queryN,ef,indexfile, gweight.getbuildweight(), gweight.getTextnum(), gweight.getContnum(),langda);
         Set<Integer> approximate = new HashSet<>();
         for (int j : m) {
             approximate.add(this.correspond.get(j));
@@ -96,6 +141,15 @@ public class MixIndex {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private Map<Integer, Set<Integer>> copyMap(Map<Integer, Set<Integer>> pnbmap) {
+        Map<Integer, Set<Integer>> newMap = new HashMap<>();
+        for (Map.Entry<Integer, Set<Integer>> entry : pnbmap.entrySet()) {
+            Set<Integer> newset = new HashSet<>(entry.getValue());
+            newMap.put(entry.getKey(), newset);
+        }
+        return newMap;
     }
 
     private String trans(float[] V,int id){

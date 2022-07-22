@@ -36,10 +36,20 @@ public class Gweight_float {
         float sum = 0;
         float[] result = new float[vector.length];
         for(int i=0;i< vector.length;i++){
-            sum += 1/pow(vector[i], this.parameter);
+            if(vector[i]!=0) {
+                sum += 1 / pow(vector[i], this.parameter);
+            }
         }
-        for(int i=0;i< vector.length;i++){
-            result[i] = (float) ((1/pow(vector[i],this.parameter))/sum);
+        if(sum ==0){
+            for(int i=0;i< vector.length;i++){
+                result[i] = 0;
+            }
+        }else {
+            for(int i=0;i< vector.length;i++){
+                if(vector[i]!=0){
+                    result[i] = (float) ((1/pow(vector[i],this.parameter))/sum);
+                }
+            }
         }
         return result;
     }

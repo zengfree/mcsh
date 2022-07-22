@@ -13,52 +13,37 @@ import java.util.Set;
 
 public class randomnode {
     public static void main(String[] args) {
-        DataReader dataReader ;
-        switch (args[0]){
-            case "dblp":
-                System.out.println("dblp");
-                dataReader = new DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge, null,Config.dblpattributed);
-                break;
-            case "imdb":
-                System.out.println("imdb");
-                dataReader = new DataReader(Config.IMDBGraph, Config.IMDBVertex, Config.IMDBEdge, null,Config.IMDBpersonattributed);
-                break;
-            case "fsq":
-                System.out.println("fsq");
-                dataReader = new DataReader(Config.FsqGraph, Config.FsqVertex, Config.FsqEdge, null,Config.Fsqattributed);
-                break;
-            default:
-                dataReader = new  DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge, null,Config.dblpattributed);
-        }
+//        DataReader dataReader = new DataReader(Config.authorGraph, Config.authorVertex, Config.authorEdge, null,Config.authorattribute);
+//        DataReader dataReader = new DataReader(Config.IMDBGraph, Config.IMDBVertex, Config.IMDBEdge, null,Config.IMDBpersonattributed);
+//        DataReader dataReader = new DataReader(Config.FsqGraph, Config.FsqVertex, Config.FsqEdge, null,Config.Fsqattributed);
+        DataReader dataReader = new DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge, null,Config.dblpattributed);
 
         int[][] graph = dataReader.readGraph();
         int[] vertexType = dataReader.readVertexType();
         int[] edgeType = dataReader.readEdgeType();
 
 
-        int queryK = Integer.parseInt(args[2]);
+        int queryK = 30;
         System.out.println(queryK);
-
-        String[] paths = args[1].split(";");
-        int[] vertex = StringToInt(paths[0].split(","));
-        int[] edge = StringToInt(paths[1].split(","));
-        MetaPath metaPath = new MetaPath(vertex,edge);
+        int[] vertex = {1,0,1},edge={3,0};
+        MetaPath queryMPath = new MetaPath(vertex, edge);
 
         try{
-            File logfile = new File("random"+ args[0] + "_" + metaPath.toString() +  ".txt");
+            File logfile = new File("dblp.txt");
             CoreDec coreDec =new CoreDec(graph,vertexType,edgeType);
-            Set<Integer> result = coreDec.queryK(metaPath,metaPath.vertex[0],queryK);
+            Set<Integer> result = coreDec.queryK(queryMPath,queryMPath.vertex[0],queryK);
             if(result==null) {
-                System.out.println(metaPath.toString()+"is null,queryk:"+queryK);
+                System.out.println(queryMPath.toString()+"is null,queryk:"+queryK);
             }
             Set<Integer> random = new HashSet<>();
             Object[] list = result.toArray();
-            while(random.size()<30){
+            while(random.size()<500){
                 int queryid = (int)list[(int)(Math.random()*list.length)];
+                if(random.contains(queryid)) continue;
                 random.add(queryid);
                 System.out.println(queryid);
             }
-            FileWriter fw = new FileWriter(logfile,true);
+            FileWriter fw = new FileWriter(logfile,false);
             for (int queryid: random) {
                 fw.write(queryid+"\n");
             }

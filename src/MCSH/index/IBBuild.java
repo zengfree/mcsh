@@ -28,7 +28,8 @@ public class IBBuild {
         int[] edge = StringToInt((Mpath[1].split(",")));
         MetaPath Path = new MetaPath(vertex, edge);
         int M = Integer.parseInt(args[2]);//50
-        int ef = Integer.parseInt(args[3]);//100
+        int ef = M*8;//100
+        float langda = Float.parseFloat((args[3]));
 
         int textnum = (int)attribute.get(-1)[0];
         int contnum = (int)attribute.get(-1)[1];
@@ -41,12 +42,12 @@ public class IBBuild {
         for(int i=0;i<contnum;i++){
             cont[i] = 1;
         }
-        String indexfile = Root+ "/"+Path.toString()+".n2";
-        String datafile = Root+ "/"+Path.toString()+".data";
+        String indexfile = Root+ "/"+Path+".n2";
+        String datafile = Root+ "/"+Path+".data";
         Gweight_float gweight = new Gweight_float(main,text,cont,2);
         Adistance_float adistance= new Adistance_float(attribute,gweight);
         MixIndex mix = new MixIndex(graph,vertexType,edgeType,attribute,adistance);
-        mix.build(Path,indexfile,datafile,M,ef);
+        mix.build(Path,indexfile,datafile,M,ef,langda);
         System.out.println("build finish!");
     }
 

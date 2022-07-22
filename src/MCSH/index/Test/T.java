@@ -76,7 +76,7 @@ public class T {
                 String datafile = "/home/hadoop/newindex/dblpdata.txt";
                 String idnexfile = "/home/hadoop/newindex/dblpindex.n2";
                 MixBasedSearch mbs1 = new MixBasedSearch(graph,vertexType,edgeType,attribute,adistance,datafile,idnexfile);
-                Set<Integer> set1 = mbs1.query(queryid,queryK,queryMPath,1600);
+                Set<Integer> set1 = mbs1.query(queryid,queryK,queryMPath,1600,(float) 1.0);
                 long t4 = System.nanoTime();
                 System.out.println("index time:"+(t4-t3)/1000000);
                 System.out.println("set2:"+set1.size());

@@ -14,9 +14,11 @@ public class Config {
 	//the root of date files
 //	public static String root = "D:\\MCSH\\CSH\\CSHDS";
 //	public static String root = "/home_bak/zxj";
-	public static String root = "/home/star/zxj";
+//	public static String root = "/home/star/zxj";
 //	public static String root = "/home/zjlab/ANNS/zxj";
 //	public static String root = "/home/hadoop/MCSH/CSHDS";
+//	public static String root = "C:\\zxj\\CSHDS";
+	public static String root = "/root/shiyan/";
 	{
 		FileSystemView fsv = FileSystemView.getFileSystemView();
 		File com=fsv.getHomeDirectory();
@@ -46,6 +48,8 @@ public class Config {
 	public static String authorEdge = authorRoot + "edge.txt";
 //	public static String authorA2G = authorRoot + "nodes.txt";
 	public static String authorattribute = authorRoot + "author_attribute2.txt";
+	public static String a2 = authorRoot + "attribute.txt";
+
 
 	//IMDB
 	public static String IMDBRoot = root + "/IMDB/";
@@ -56,11 +60,12 @@ public class Config {
 	public static String IMDBmovieattributed = IMDBRoot + "IMDBmovieattributes.txt";
 
 	//Foursquare
-	public static String FsqRoot = root + "/FourSquare/";
+	public static String FsqRoot = root + "/Foursquare/";
 	public static String FsqGraph = FsqRoot + "Foursquaregraph.txt";
 	public static String FsqVertex = FsqRoot + "Foursquarevertex.txt";
 	public static String FsqEdge = FsqRoot + "Foursquareedge.txt";
 	public static String Fsqattributed = FsqRoot + "FoursquarePersonPrefernceAttributes.txt";
+	public static String Fsqattributed2 = FsqRoot + "a1.txt";
 
 	public static String machineName = "Sward";
 //	public static String logFinalResultFile = Config.root + "/outdata/" + machineName;//our final experimental result data

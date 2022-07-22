@@ -46,7 +46,7 @@ public class Kbasem {
         int queryK = Integer.parseInt(args[0]);
         int queryM = Integer.parseInt(args[1]);
         int threadnum = Integer.parseInt(args[2]);
-        String queryfile = Config.QueryFile+ args[5];
+        String queryfile = args[5];
 //        String queryfile ="/home/hadoop/dblequerynodes.txt";
         String[] Mpath = args[3].split(";");
         int[] vertex = StringToInt(Mpath[0].split(","));
@@ -85,8 +85,9 @@ public class Kbasem {
             System.out.println("querynodes size:"+querynodes.size());
             stdin.close();
 
-            File logfile = new File(Config.ResultFile +args[4] +"/ktest/basemlogmap_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
+            File logfile = new File("result/basemyu_" + queryK + "_"  + queryM + "_"+ queryMPath.toString() + ".txt");
             ExecutorService exec = Executors.newFixedThreadPool(threadnum);
+            adistance.setYu((float) 0.5);
             FileWriter fw = new FileWriter(logfile, true);
             for(int queryid:querynodes){
                 System.out.println("Mp:"+queryMPath.toString()+",queryid:"+queryid);

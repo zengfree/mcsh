@@ -38,10 +38,10 @@ public class Base_logmap2 {
         if(queryMPath.vertex[0] != vertexType[queryId])   return null;
 
         //step 1: build the connected homogeneous graph
-        long t1=System.nanoTime();
+//        long t1=System.nanoTime();
         Map<Integer, Set<Integer>> pnbMap = buildGraph();
-        long t2 = System.nanoTime();
-        System.out.println("build time:"+(t2-t1)/1000000);
+//        long t2 = System.nanoTime();
+//        System.out.println("build time:"+(t2-t1)/1e6+"ms");
 
         //step 2: compute the connected k-core
 //        long t3 = System.nanoTime();
@@ -69,10 +69,10 @@ public class Base_logmap2 {
         if(queryMPath.vertex[0] != vertexType[queryId])   return null;
 
         //step 1: build the connected homogeneous graph
-        long t1=System.nanoTime();
+//        long t1=System.nanoTime();
         Map<Integer, Set<Integer>> pnbMap = buildGraph();
-        long t2 = System.nanoTime();
-        System.out.println("build time:"+(t2-t1));
+//        long t2 = System.nanoTime();
+//        System.out.println("build time:"+(t2-t1)/1e6+"ms");
 
         //step 2: compute the connected k-core
 //        long t3 = System.nanoTime();
@@ -98,10 +98,10 @@ public class Base_logmap2 {
         if(queryMPath.vertex[0] != vertexType[queryId])   return null;
 
         //step 1: build the connected homogeneous graph
-        long t1=System.nanoTime();
+//        long t1=System.nanoTime();
         Map<Integer, Set<Integer>> pnbMap = buildGraph();
-        long t2 = System.nanoTime();
-        System.out.println("build time:"+(t2-t1));
+//        long t2 = System.nanoTime();
+//        System.out.println("build time:"+(t2-t1)/1e6+"ms");
 
         //step 2: compute the connected k-core
 //        long t3 = System.nanoTime();

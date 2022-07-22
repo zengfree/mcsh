@@ -16,7 +16,7 @@ public class IBAlgorithm {
         String Vertex = Root + "/vertex.txt";
         String Edge = Root + "/edge.txt";
 //        String Attribute = Root + "/data.txt";
-        String Attribute = Root + "/DBLPdata.txt";
+        String Attribute = Root + "/attribute.txt";
         DataReader dataReader = new DataReader(Graph,Vertex,Edge,null,Attribute);
         int[][] graph = dataReader.readGraph();
         int[] vertexType = dataReader.readVertexType();
@@ -28,12 +28,14 @@ public class IBAlgorithm {
         int queryId = Integer.parseInt(args[1]);
         int queryK = Integer.parseInt(args[2]);
         int queryM = Integer.parseInt(args[3]);
-        String[] Mpath = args[4].split(";");
+        float tao = Float.parseFloat(args[4]);
+        String[] Mpath = args[5].split(";");
         int[] vertex = StringToInt(Mpath[0].split(","));
         int[] edge = StringToInt((Mpath[1].split(",")));
         MetaPath queryMPath = new MetaPath(vertex, edge);
 //        System.out.println(queryMPath);
-        int v2 = Integer.parseInt(args[5]);
+        int n = Integer.parseInt(args[6]);
+        float langda = Float.parseFloat(args[7]);
 
         int[] main = {1,1};
         int[] text = new int[textnum];
@@ -46,15 +48,37 @@ public class IBAlgorithm {
         }
         Gweight_float gweight_float = new Gweight_float(main,text,cont,2);
         Adistance_float adistance = new Adistance_float(integerMap,gweight_float);
-        System.out.println("queryId:"+queryId+",queryK:"+queryK+",queryMPath:"+queryMPath);
+        adistance.setYu(tao);
+        System.out.println("queryId:"+queryId+",queryK:"+queryK+",queryMPath:"+queryMPath+",queryM:"+queryM+",tao:"+tao+",n:"+n+",lambda:"+langda);
         String indexfile = Root+ "/"+queryMPath.toString()+".n2";
         String datafile = Root+ "/"+queryMPath.toString()+".data";
 
         MixBasedSearch mix = new MixBasedSearch(graph,vertexType,edgeType,integerMap,adistance,datafile,indexfile);
-        Set<Integer> result = mix.queryMP(queryId,queryK,queryMPath,v2,queryM);
-        if(result!=null){
-            System.out.println("find:"+result.size());
-            for (int id:result){
+        Set<Integer> result1 = mix.query(queryId,queryK,queryMPath,n,langda);
+        System.out.print("MCD-index: ");
+        if(result1!=null){
+            System.out.println("find:"+result1.size());
+            for (int id:result1){
+                System.out.print(id+" ");
+            }
+        }else {
+            System.out.println("no this kcore");
+        }
+        Set<Integer> result2 =mix.queryM(queryId,queryK,queryMPath,queryM,n,langda);
+        System.out.print("BD-index: ");
+        if(result2!=null){
+            System.out.println("find:"+result2.size());
+            for (int id:result2){
+                System.out.print(id+" ");
+            }
+        }else {
+            System.out.println("no this kcore");
+        }
+        Set<Integer> result3 =mix.queryMP(queryId,queryK,queryMPath,queryM,n,langda);
+        System.out.print("BDP-index: ");
+        if(result3!=null){
+            System.out.println("find:"+result3.size());
+            for (int id:result3){
                 System.out.print(id+" ");
             }
         }else {

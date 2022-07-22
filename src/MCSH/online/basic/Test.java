@@ -15,10 +15,10 @@ public class Test {
 
     public static void main(String[] args) throws IOException {
 //        DataReader dataReader = new DataReader(Config.smallDBLPGraph, Config.smallDBLPVertex, Config.smallDBLPEdge);
-		DataReader dataReader = new DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge,null,Config.dblpattributed);
+//		DataReader dataReader = new DataReader(Config.dblpGraph, Config.dblpVertex, Config.dblpEdge,null,Config.dblpattributed);
 //        DataReader dataReader = new DataReader(Config.authorGraph, Config.authorVertex, Config.authorEdge, null,Config.authorattribute);
 //        DataReader dataReader = new DataReader(Config.IMDBGraph, Config.IMDBVertex, Config.IMDBEdge, null,Config.IMDBpersonattributed);
-//        DataReader dataReader = new DataReader(Config.FsqGraph, Config.FsqVertex, Config.FsqEdge, null,Config.Fsqattributed);
+        DataReader dataReader = new DataReader(Config.FsqGraph, Config.FsqVertex, Config.FsqEdge, null,Config.Fsqattributed);
 
         int[][] graph = dataReader.readGraph();
         int[] vertexType = dataReader.readVertexType();
@@ -31,8 +31,8 @@ public class Test {
 
 //        int queryK = 45;
 //        int queryM = 10;
-        int[] vertex = {1, 0, 1}; //MPM
-        int[] edge = {3, 0};
+        int[] vertex = {0, 1, 0}; //MPM
+        int[] edge = {0, 6};
         MetaPath queryMPath = new MetaPath(vertex, edge);
         System.out.println(queryMPath);
 
@@ -55,46 +55,46 @@ public class Test {
 //        int count = 0;
 //        long time1 = 0, time2 = 0;
 //        for (int queryK = 35;queryK>=25;queryK--){
-                int queryId = 140528;
-                long t1 = System.nanoTime();
-                Build b = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
-                Map<Integer, Set<Integer>> map1 = b.build1(queryMPath,queryId);
-                long t2 = System.nanoTime();
-                System.out.println((t2-t1)/1000000);
-
-//                long t3 = System.nanoTime();
-//                Build b1 = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
-//                Map<Integer, Set<Integer>> map3 = b1.build3(queryMPath,queryId);
-//                long t4 = System.nanoTime();
-//                System.out.println((t4-t3)/1000000);
-
-                long t5 = System.nanoTime();
-                Build b3 = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
-                Map<Integer, Set<Integer>> map2 = b3.bm2(queryMPath,queryId);
-                long t6 = System.nanoTime();
-                System.out.println((t6-t5)/1000000);
-
+//                int queryId = 140528;
+//                long t1 = System.nanoTime();
+//                Build b = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
+//                Map<Integer, Set<Integer>> map1 = b.build1(queryMPath,queryId);
+//                long t2 = System.nanoTime();
+//                System.out.println((t2-t1)/1000000);
 //
-                int flag1=0;
-                for (Map.Entry<Integer,Set<Integer>> entry:map1.entrySet()){
-                    int i = entry.getKey();
-                    Set<Integer> set1 = entry.getValue();
-                    if(set1.size()>0){
-                        Set<Integer> set2 = new HashSet<>(set1);
-                        Set<Integer> set = map2.get(i);
-                        set2.retainAll(set);
-                        if(set2.size()!=set1.size()){
-                            System.out.println(set1.size()+":"+set.size());
-                            flag1=1;
-                            break;
-                        }
-                    }
-                }
-                if (flag1==1){
-                    System.out.println("map3 error!");
-                }else {
-                    System.out.println("map3 fine!");
-                }
+////                long t3 = System.nanoTime();
+////                Build b1 = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
+////                Map<Integer, Set<Integer>> map3 = b1.build3(queryMPath,queryId);
+////                long t4 = System.nanoTime();
+////                System.out.println((t4-t3)/1000000);
+//
+//                long t5 = System.nanoTime();
+//                Build b3 = new Build(graph,vertexType,edgeType,new HashMap<>(),adistance_float);
+//                Map<Integer, Set<Integer>> map2 = b3.bm2(queryMPath,queryId);
+//                long t6 = System.nanoTime();
+//                System.out.println((t6-t5)/1000000);
+//
+////
+//                int flag1=0;
+//                for (Map.Entry<Integer,Set<Integer>> entry:map1.entrySet()){
+//                    int i = entry.getKey();
+//                    Set<Integer> set1 = entry.getValue();
+//                    if(set1.size()>0){
+//                        Set<Integer> set2 = new HashSet<>(set1);
+//                        Set<Integer> set = map2.get(i);
+//                        set2.retainAll(set);
+//                        if(set2.size()!=set1.size()){
+//                            System.out.println(set1.size()+":"+set.size());
+//                            flag1=1;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (flag1==1){
+//                    System.out.println("map3 error!");
+//                }else {
+//                    System.out.println("map3 fine!");
+//                }
 
 //                int queryId = i;
 //                System.out.println("queryId=" + queryId + " queryK=" + queryK);

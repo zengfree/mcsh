@@ -42,7 +42,7 @@ public class Mbasemp {
         int textnum =(int)attribute.get(-1)[0];
         int contnum =(int)attribute.get(-1)[1];
 
-        String queryfile = Config.QueryFile+args[1];
+        String queryfile = args[1];
         int queryK = Integer.parseInt(args[2]);
         int threadnum = Integer.parseInt(args[3]);
 
@@ -64,6 +64,7 @@ public class Mbasemp {
         Gweight_float gweight = new Gweight_float(main, text, cont, 2);
         //        System.out.println(gweight.toString());
         Adistance_float adistance = new Adistance_float(attribute, gweight);
+        adistance.setYu((float) 0.5);
         try {
             BufferedReader stdin = new BufferedReader(new FileReader(queryfile));
             String line;
@@ -76,7 +77,7 @@ public class Mbasemp {
             stdin.close();
 
             for(int i=2;i<=20;i = i+2) {
-                File logfile = new File(Config.ResultFile + args[0] + "/mtest/basemp" + i + "_" +queryK  + "_"+ queryMPath.toString() + ".txt");
+                File logfile = new File("mtest/basemp" + i + "_" +queryK  + "_"+ queryMPath.toString() + ".txt");
                 ExecutorService exec = Executors.newFixedThreadPool(threadnum);
                 FileWriter fw = new FileWriter(logfile, true);
                 for (int queryid:querynodes){

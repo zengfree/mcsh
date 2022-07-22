@@ -70,7 +70,7 @@ public class indext {
             MixIndex mixIndex = new MixIndex(graph,vertexType,edgeType,attribute,adistance);
 //            long t13 = System.nanoTime();
 //            mixIndex.build(Path,idnexfile1,datafile1,50,600);
-            Set<Integer> set = mixIndex.search(queryid,queryk,queryN,datafile1,idnexfile1);
+            Set<Integer> set = mixIndex.search(queryid,queryk,queryN,datafile1,idnexfile1,(float) 1.0);
             long t2 = System.nanoTime();
             System.out.println("nsw:"+(t2-t1));
 //            System.out.println("nsw s:"+(t2-t13));

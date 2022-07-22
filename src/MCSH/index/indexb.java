@@ -65,7 +65,7 @@ public class indexb {
         Adistance_float adistance = new Adistance_float(attribute, gweight);
 
         MixIndex mix = new MixIndex(graph,vertexType,edgeType,attribute,adistance);
-        mix.build(Path,idnexfile,datafile,M,ef);
+        mix.build(Path,idnexfile,datafile,M,ef,(float) 1.0);
 
     }
 
